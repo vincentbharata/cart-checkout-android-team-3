@@ -58,13 +58,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        binding.fabAddToCart.setOnClickListener {
-            try {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.fragmentProductPicker)
-            } catch (e: Exception) {
-                // Fallback jika navigation gagal
-            }
-        }
+        // Removed FAB click listener as the button has been deleted
 
         // Setup bottom navigation click manually jika auto setup gagal
         binding.bottomNavigation.setOnItemSelectedListener { item ->

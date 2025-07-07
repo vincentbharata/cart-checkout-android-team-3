@@ -97,7 +97,6 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="@drawable/quantity_bg"
-                android:padding="12dp"
                 android:layout_marginBottom="24dp">
 
                 <com.google.android.material.button.MaterialButton
@@ -105,31 +104,42 @@
                     style="@style/Widget.Material3.Button.IconButton"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
                     app:icon="@drawable/ic_remove"
                     app:iconSize="24dp"
                     app:iconTint="@color/primary"
-                    app:backgroundTint="@color/white" />
+                    app:backgroundTint="@android:color/transparent"
+                    app:cornerRadius="16dp"
+                    app:rippleColor="@color/primary_light" />
 
                 <TextView
                     android:id="@+id/tvQuantity"
                     android:layout_width="80dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:text="1"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:gravity="center"
-                    android:layout_marginHorizontal="20dp" />
+                    android:gravity="center" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnIncrease"
                     style="@style/Widget.Material3.Button.IconButton"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
                     app:icon="@drawable/ic_add"
                     app:iconSize="24dp"
                     app:iconTint="@color/white"
-                    app:backgroundTint="@color/primary" />
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="16dp"
+                    app:rippleColor="@color/primary_dark" />
 
             </LinearLayout>
 
@@ -180,11 +190,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
@@ -192,13 +202,14 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginEnd="8dp"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/error"
             app:cornerRadius="12dp"
-            app:strokeColor="@color/error"
-            app:strokeWidth="2dp"
-            android:textColor="@color/error"
             app:icon="@drawable/ic_delete"
             app:iconSize="20dp"
-            app:iconGravity="textStart" />
+            app:iconTint="@color/white"
+            app:iconGravity="textStart"
+            app:rippleColor="@color/error_light" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnUpdateCart"
@@ -209,12 +220,14 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginStart="8dp"
-            app:cornerRadius="12dp"
-            app:backgroundTint="@color/primary"
             android:textColor="@color/white"
+            app:backgroundTint="@color/primary"
+            app:cornerRadius="12dp"
             app:icon="@drawable/ic_add_shopping_cart"
             app:iconSize="20dp"
-            app:iconGravity="textStart" />
+            app:iconTint="@color/white"
+            app:iconGravity="textStart"
+            app:rippleColor="@color/primary_dark" />
 
     </LinearLayout>
 

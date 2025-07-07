@@ -45,15 +45,4 @@
         android:background="@color/white"
         app:elevation="8dp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddToCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_shopping_cart"
-        app:layout_anchor="@id/bottom_navigation"
-        app:layout_anchorGravity="top|end"
-        app:backgroundTint="@color/accent"
-        app:tint="@color/white" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -85,4 +85,10 @@ class CartRepository(private val database: AppDatabase) {
     suspend fun deleteCartHistory(cartHistory: CartHistoryEntity) {
         cartHistoryDao.deleteCartHistory(cartHistory)
     }
+
+    suspend fun clearCart(userId: Int) {
+        // For this demo app, we don't need to do anything here since we're using in-memory cart state
+        // In a real app, this would clear the cart from the server or local database
+        android.util.Log.d("CartRepository", "Cart cleared for user $userId")
+    }
 }

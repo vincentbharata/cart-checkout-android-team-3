@@ -123,9 +123,14 @@ class FragmentQuantitySelector : Fragment() {
                 if (isEditMode && cartItem != null) {
                     // Update existing cart item
                     viewModel.updateCartItemQuantity(cartItem!!.id, quantity)
+                    Toast.makeText(requireContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show()
                 } else if (product != null) {
                     // Add new product to cart
                     viewModel.addToCart(product!!.id, quantity)
+
+                    // Immediately navigate back to product list after adding
+                    Toast.makeText(requireContext(), "Added to cart successfully", Toast.LENGTH_SHORT).show()
+                    navigateToProductList()
                 }
             }
         }
@@ -143,20 +148,44 @@ class FragmentQuantitySelector : Fragment() {
             }
         }
 
-        // Only observe for success feedback, don't auto-navigate
-        viewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
-            // Check if we just added an item successfully
-            product?.let { currentProduct ->
-                val addedItem = cartItems.find { it.id == currentProduct.id }
-                if (addedItem != null && !viewModel.loading.value!!) {
-                    // Show success message but don't auto-navigate
-                    val message = if (isEditMode) "Cart updated successfully" else "Added to cart successfully"
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        // Simplified and more reliable navigation logic
+        var hasNavigated = false
 
-                    // Reset quantity to 1 for next addition
-                    quantity = 1
-                    updateQuantityDisplay()
-                    updateTotalPrice()
+        viewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
+            if (!viewModel.loading.value!! && !hasNavigated) {
+                if (!isEditMode && product != null) {
+                    // For add mode: check if item was actually added
+                    val addedItem = cartItems.find { it.id == product!!.id }
+                    if (addedItem != null) {
+                        hasNavigated = true
+                        Toast.makeText(requireContext(), "Added to cart successfully", Toast.LENGTH_SHORT).show()
+
+                        // Navigate back to product list immediately after successful add
+                        navigateToProductList()
+                    }
+                } else if (isEditMode && cartItem != null) {
+                    // For edit mode: just show success message
+                    Toast.makeText(requireContext(), "Cart updated successfully", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun navigateToProductList() {
+        try {
+            // Try to navigate to product picker directly
+            findNavController().navigate(R.id.fragmentProductPicker)
+        } catch (e: Exception) {
+            try {
+                // Fallback 1: Pop back to previous fragment
+                findNavController().popBackStack()
+            } catch (ex: Exception) {
+                try {
+                    // Fallback 2: Navigate to product picker by clearing stack
+                    findNavController().popBackStack(R.id.fragmentProductPicker, false)
+                } catch (ex2: Exception) {
+                    // Final fallback: use activity back button
+                    activity?.onBackPressed()
                 }
             }
         }

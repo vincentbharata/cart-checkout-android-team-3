@@ -103,6 +103,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         _error.value = null
     }
 
+    fun clearCheckoutResult() {
+        _checkoutResult.value = ""
+    }
+
     fun loadProducts() {
         // Prevent multiple simultaneous API calls
         if (isLoadingProducts) return
@@ -394,7 +398,11 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
                     // Save to local database as completed order
                     repository.saveCartHistory(currentCart, "completed")
 
-                    // Clear the current cart
+                    // Clear the current cart completely
+                    val userId = userPreferences.getUserId()
+                    repository.clearCart(userId)
+
+                    // Update UI state
                     _cart.value = null
                     _cartItems.value = emptyList()
 

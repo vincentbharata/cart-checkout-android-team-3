@@ -50,6 +50,15 @@ class FragmentCheckoutResult : Fragment() {
                 Toast.makeText(requireContext(), "Navigation error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnViewOrders.setOnClickListener {
+            try {
+                // Navigate to cart history
+                findNavController().navigate(R.id.fragmentCartHistory)
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Navigation error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroyView() {

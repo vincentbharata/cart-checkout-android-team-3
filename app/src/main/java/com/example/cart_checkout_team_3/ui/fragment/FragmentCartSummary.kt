@@ -90,6 +90,10 @@ class FragmentCartSummary : Fragment() {
                     val bundle = Bundle().apply {
                         putString("checkout_message", result)
                     }
+                    // Clear the checkout result to prevent repeated navigation
+                    viewModel.clearCheckoutResult()
+
+                    // Navigate to checkout result with proper navigation
                     findNavController().navigate(R.id.fragmentCheckoutResult, bundle)
                 } catch (e: Exception) {
                     Toast.makeText(requireContext(), result, Toast.LENGTH_LONG).show()

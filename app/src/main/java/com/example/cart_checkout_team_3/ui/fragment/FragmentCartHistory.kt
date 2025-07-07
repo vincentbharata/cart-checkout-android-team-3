@@ -98,6 +98,9 @@ class FragmentCartHistory : Fragment() {
                 viewModel.getCartHistory().collect { historyList ->
                     historyAdapter.submitList(historyList)
 
+                    // Update header count
+                    updateHistoryCount(historyList.size)
+
                     if (historyList.isEmpty()) {
                         showEmptyHistory()
                     } else {
@@ -107,6 +110,14 @@ class FragmentCartHistory : Fragment() {
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Error loading history: ${e.message}", Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    private fun updateHistoryCount(count: Int) {
+        binding.tvHistoryCount.text = if (count == 0) {
+            "No orders found"
+        } else {
+            "$count order${if (count > 1) "s" else ""} found"
         }
     }
 

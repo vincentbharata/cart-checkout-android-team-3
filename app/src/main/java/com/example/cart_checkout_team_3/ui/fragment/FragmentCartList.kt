@@ -145,6 +145,8 @@ class FragmentCartList : Fragment() {
             rvCartItems.visibility = View.GONE
             layoutEmptyCart.visibility = View.VISIBLE
             btnCheckout.isEnabled = false
+            // Update header to show 0 items when cart is empty
+            tvCartItemCount.text = "0 items in cart"
         }
     }
 
@@ -160,7 +162,11 @@ class FragmentCartList : Fragment() {
         val itemCount = cartItems.size
         val totalQuantity = cartItems.sumOf { it.quantity }
 
-        binding.tvCartItemCount.text = "$itemCount items ($totalQuantity pieces)"
+        binding.tvCartItemCount.text = if (itemCount == 0) {
+            "0 items in cart"
+        } else {
+            "$itemCount item${if (itemCount > 1) "s" else ""} ($totalQuantity piece${if (totalQuantity > 1) "s" else ""}) in cart"
+        }
     }
 
     private fun updateCartTotals(total: Double, discountedTotal: Double) {
