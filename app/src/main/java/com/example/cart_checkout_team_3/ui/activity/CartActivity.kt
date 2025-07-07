@@ -98,25 +98,22 @@ class CartActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             } else {
-                // User is logged in, load their cart and products
-                viewModel.loadCartForUser(user.id)
-                viewModel.loadProducts()
+                // User is logged in, load their cart and products ONLY ONCE
+                // Check if data is already loaded to prevent redundant calls
+                if (viewModel.products.value.isNullOrEmpty()) {
+                    viewModel.loadProducts()
+                }
+                if (viewModel.cart.value == null) {
+                    viewModel.loadCartForUser(user.id)
+                }
             }
         }
 
-        // Observe cart changes to update UI
+        // Remove redundant product loading observer that causes multiple calls
         viewModel.cartItems.observe(this) { cartItems ->
             // Update bottom navigation badge if needed
             val cartCount = cartItems.sumOf { it.quantity }
             // You can add badge logic here if needed
-        }
-
-        // Observe products to ensure they're loaded
-        viewModel.products.observe(this) { products ->
-            if (products.isEmpty()) {
-                // Retry loading products if empty
-                viewModel.loadProducts()
-            }
         }
     }
 

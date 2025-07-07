@@ -46,6 +46,9 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val _checkoutResult = MutableLiveData<String>()
     val checkoutResult: LiveData<String> = _checkoutResult
 
+    // Add flag to prevent multiple simultaneous API calls
+    private var isLoadingProducts = false
+
     init {
         loadUser()
         // Remove automatic default user creation
@@ -101,7 +104,11 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadProducts() {
+        // Prevent multiple simultaneous API calls
+        if (isLoadingProducts) return
+
         viewModelScope.launch {
+            isLoadingProducts = true
             _loading.value = true
             _error.value = null
 
@@ -149,6 +156,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
                 loadFallbackProducts()
             } finally {
                 _loading.value = false
+                isLoadingProducts = false
             }
         }
     }
@@ -158,41 +166,41 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         val fallbackProducts = listOf(
             Product(
                 id = 1,
-                title = "Sample Product 1",
-                description = "This is a sample product for offline mode",
+                title = "Wireless Bluetooth Headphones",
+                description = "High-quality wireless headphones with noise cancellation",
                 price = 29.99,
                 discountPercentage = 10.0,
                 rating = 4.5,
                 stock = 50,
-                brand = "Sample Brand",
+                brand = "TechSound",
                 category = "electronics",
-                thumbnail = "",
+                thumbnail = "placeholder", // Use placeholder instead of empty string
                 images = emptyList()
             ),
             Product(
                 id = 2,
-                title = "Sample Product 2",
-                description = "Another sample product for offline mode",
+                title = "Premium Cotton T-Shirt",
+                description = "Comfortable and stylish cotton t-shirt for everyday wear",
                 price = 49.99,
                 discountPercentage = 15.0,
                 rating = 4.2,
                 stock = 30,
-                brand = "Sample Brand",
+                brand = "StyleWear",
                 category = "fashion",
-                thumbnail = "",
+                thumbnail = "placeholder", // Use placeholder instead of empty string
                 images = emptyList()
             ),
             Product(
                 id = 3,
-                title = "Sample Product 3",
-                description = "Third sample product for offline mode",
+                title = "Smart Coffee Maker",
+                description = "Programmable coffee maker with built-in timer and auto-brew",
                 price = 19.99,
                 discountPercentage = 5.0,
                 rating = 4.8,
                 stock = 100,
-                brand = "Sample Brand",
+                brand = "HomeChef",
                 category = "home",
-                thumbnail = "",
+                thumbnail = "placeholder", // Use placeholder instead of empty string
                 images = emptyList()
             )
         )

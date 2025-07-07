@@ -175,11 +175,12 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Action Buttons -->
+    <!-- Action Buttons - Improved Design -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
@@ -188,21 +189,32 @@
             android:layout_height="56dp"
             android:layout_weight="1"
             android:text="Cancel"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_marginEnd="8dp"
-            app:cornerRadius="28dp"
-            app:strokeColor="@color/text_secondary"
-            android:textColor="@color/text_secondary" />
+            app:cornerRadius="12dp"
+            app:strokeColor="@color/error"
+            app:strokeWidth="2dp"
+            android:textColor="@color/error"
+            app:icon="@drawable/ic_delete"
+            app:iconSize="20dp"
+            app:iconGravity="textStart" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnUpdateCart"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
-            android:text="Update Cart"
+            android:text="Add to Cart"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_marginStart="8dp"
-            app:cornerRadius="28dp"
+            app:cornerRadius="12dp"
             app:backgroundTint="@color/primary"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_add_shopping_cart"
+            app:iconSize="20dp"
+            app:iconGravity="textStart" />
 
     </LinearLayout>
 

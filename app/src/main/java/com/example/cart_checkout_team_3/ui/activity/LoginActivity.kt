@@ -26,23 +26,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        // Observe user changes but don't auto-navigate on activity creation
-        viewModel.user.observe(this) { user ->
-            // Only navigate if this is a result of successful login, not initial load
-            if (user != null && viewModel.loginSuccess.value == true) {
-                navigateToCart()
-            }
-        }
-
         viewModel.loading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) android.view.View.VISIBLE else android.view.View.GONE
             binding.btnLogin.isEnabled = !isLoading
         }
 
+        // Single observer for login success - prevent double navigation
         viewModel.loginSuccess.observe(this) { success ->
             if (success) {
                 Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-                // Navigation will be handled by user observer
+                navigateToCart()
             }
         }
 

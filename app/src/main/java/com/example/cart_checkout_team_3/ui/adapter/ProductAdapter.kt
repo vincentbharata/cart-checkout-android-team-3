@@ -34,11 +34,12 @@ class ProductAdapter(
                 tvProductPrice.text = "$${String.format("%.2f", product.price)}"
                 tvProductRating.text = String.format("%.1f", product.rating)
 
-                // Load product image
+                // Load product image with better placeholder handling
                 Glide.with(itemView.context)
-                    .load(product.thumbnail)
+                    .load(if (product.thumbnail.isEmpty() || product.thumbnail == "placeholder") null else product.thumbnail)
                     .placeholder(R.drawable.placeholder_image)
                     .error(R.drawable.placeholder_image)
+                    .fallback(R.drawable.placeholder_image)
                     .into(ivProductImage)
 
                 // Click listeners
