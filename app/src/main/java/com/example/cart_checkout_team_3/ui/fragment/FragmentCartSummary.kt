@@ -112,28 +112,15 @@ class FragmentCartSummary : Fragment() {
 
     private fun updateSummary(cartItems: List<CartItem>) {
         val itemCount = cartItems.sumOf { it.quantity }
-        val subtotal = cartItems.sumOf { it.total }
 
-        // Show summary in toast since UI elements might not exist
-        Toast.makeText(
-            requireContext(),
-            "$itemCount items - Subtotal: $${String.format("%.2f", subtotal)}",
-            Toast.LENGTH_SHORT
-        ).show()
+        // Update the header item count with real data
+        binding.tvItemsCount.text = "$itemCount item${if (itemCount != 1) "s" else ""}"
     }
 
     private fun updatePriceBreakdown(cart: Cart) {
-        val discount = cart.total - cart.discountedTotal
-        val tax = cart.discountedTotal * 0.08
-        val shipping = if (cart.discountedTotal > 50) 0.0 else 5.99
-        val finalTotal = cart.discountedTotal + tax + shipping
-
-        // Show price breakdown in toast
-        Toast.makeText(
-            requireContext(),
-            "Total: $${String.format("%.2f", finalTotal)} (includes tax & shipping)",
-            Toast.LENGTH_LONG
-        ).show()
+        // Show only the synced total from actual cart items
+        val actualTotal = cart.discountedTotal
+        binding.tvTotal.text = "$${String.format("%.2f", actualTotal)}"
     }
 
     override fun onDestroyView() {
