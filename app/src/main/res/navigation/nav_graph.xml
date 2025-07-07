@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentCartList">
+
+    <fragment
+        android:id="@+id/fragmentCartList"
+        android:name="com.example.cart_checkout_team_3.ui.fragment.FragmentCartList"
+        android:label="Cart"
+        tools:layout="@layout/fragment_cart_list">
+        <action
+            android:id="@+id/action_cartList_to_cartDetail"
+            app:destination="@id/fragmentCartDetail" />
+        <action
+            android:id="@+id/action_cartList_to_cartSummary"
+            app:destination="@id/fragmentCartSummary" />
+        <action
+            android:id="@+id/action_cartList_to_productPicker"
+            app:destination="@id/fragmentProductPicker" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentCartDetail"
+        android:name="com.example.cart_checkout_team_3.ui.fragment.FragmentCartDetail"
+        android:label="Cart Item Details"
+        tools:layout="@layout/fragment_cart_detail">
+        <action
+            android:id="@+id/action_cartDetail_to_quantitySelector"
+            app:destination="@id/fragmentQuantitySelector" />
+        <argument
+            android:name="cart_item"
+            app:argType="com.example.cart_checkout_team_3.data.models.CartItem" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentProductPicker"
+        android:name="com.example.cart_checkout_team_3.ui.fragment.FragmentProductPicker"
+        android:label="Products"
+        tools:layout="@layout/fragment_product_picker">
+        <action
+            android:id="@+id/action_productPicker_to_addToCart"
+            app:destination="@id/fragmentAddToCart" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentAddToCart"
+        android:name="com.example.cart_checkout_team_3.ui.fragment.FragmentAddToCart"
+        android:label="Add to Cart"
+        tools:layout="@layout/fragment_add_to_cart">
+        <argument
+            android:name="product"
+            app:argType="com.example.cart_checkout_team_3.data.models.Product" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentQuantitySelector"
+        android:name="com.example.cart_checkout_team_3.ui.fragment.FragmentQuantitySelector"
+        android:label="Select Quantity"
+        tools:layout="@layout/fragment_quantity_selector">
+        <argument
+            android:name="cart_item"
+            app:argType="com.example.cart_checkout_team_3.data.models.CartItem" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentCartHistory"
+        android:name="com.example.cart_checkout_team_3.ui.fragment.FragmentCartHistory"
+        android:label="Order History"
+        tools:layout="@layout/fragment_cart_history">
+        <action
+            android:id="@+id/action_cartHistory_to_cartSummary"
+            app:destination="@id/fragmentCartSummary" />
+        <action
+            android:id="@+id/action_cartHistory_to_productPicker"
+            app:destination="@id/fragmentProductPicker" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentCartSummary"
+        android:name="com.example.cart_checkout_team_3.ui.fragment.FragmentCartSummary"
+        android:label="Checkout"
+        tools:layout="@layout/fragment_cart_summary">
+        <action
+            android:id="@+id/action_cartSummary_to_checkoutResult"
+            app:destination="@id/fragmentCheckoutResult" />
+        <argument
+            android:name="history_id"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentCheckoutResult"
+        android:name="com.example.cart_checkout_team_3.ui.fragment.FragmentCheckoutResult"
+        android:label="Order Confirmation"
+        tools:layout="@layout/fragment_checkout_result">
+        <action
+            android:id="@+id/action_checkoutResult_to_cartHistory"
+            app:destination="@id/fragmentCartHistory" />
+        <action
+            android:id="@+id/action_checkoutResult_to_productPicker"
+            app:destination="@id/fragmentProductPicker" />
+        <argument
+            android:name="checkout_message"
+            app:argType="string" />
+    </fragment>
+
+</navigation>
