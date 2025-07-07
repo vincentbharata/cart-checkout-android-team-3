@@ -1,4 +1,3 @@
----
 ## 🔷 TEAM 3 – **Cart & Checkout Simulation**
 
 ### 🎯 Fokus: Keranjang, produk, checkout
@@ -70,4 +69,3 @@
 #### ✅ GET Cart by User
 
 - **URL**: `GET /carts/user/{userId}`
----
