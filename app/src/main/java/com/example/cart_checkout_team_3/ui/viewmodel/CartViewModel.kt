@@ -65,30 +65,77 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
             _error.value = null
 
             try {
-                // For demo purposes, accept any non-empty credentials
-                if (username.isNotEmpty() && password.isNotEmpty()) {
-                    // Create user with provided credentials
-                    val user = User(
-                        id = 1,
-                        username = username,
-                        email = "$username@example.com",
-                        firstName = username.capitalize(),
-                        lastName = "User",
-                        gender = "unknown",
-                        image = ""
-                    )
-                    userPreferences.saveUser(user, "demo_token_${username}")
-                    _user.value = user
-                    _loginSuccess.value = true
+                android.util.Log.d("CartViewModel", "Attempting login for user: $username")
 
-                    // Initialize empty cart for the user
-                    loadCartForUser(user.id)
+                // Use actual API login instead of dummy validation
+                val response = repository.login(username, password)
 
-                    android.util.Log.d("CartViewModel", "Login successful for user: $username")
+                // Log response with firstName first, then token
+                val firstName = response.body()?.firstName ?: "null"
+                val token = response.body()?.accessToken ?: "null"
+                android.util.Log.d("CartViewModel", "Login API response - isSuccessful: ${response.isSuccessful}, code: ${response.code()}, firstName: $firstName, token: $token")
+
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    android.util.Log.d("CartViewModel", "Login response body: $loginResponse")
+
+                    if (loginResponse != null) {
+                        // Create User object from login response fields
+                        val user = User(
+                            id = loginResponse.id,
+                            username = loginResponse.username,
+                            email = loginResponse.email,
+                            firstName = loginResponse.firstName,
+                            lastName = loginResponse.lastName,
+                            gender = loginResponse.gender,
+                            image = loginResponse.image
+                        )
+
+                        // Save user data with access token
+                        userPreferences.saveUser(user, loginResponse.accessToken)
+                        _user.value = user
+                        _loginSuccess.value = true
+
+                        // Initialize cart for the logged-in user
+                        loadCartForUser(user.id)
+
+                        android.util.Log.d("CartViewModel", "Login successful for user: ${user.username}")
+                    } else {
+                        android.util.Log.e("CartViewModel", "Login response body is null")
+                        _error.value = "Login failed: Invalid response from server"
+                        _loginSuccess.value = false
+                    }
                 } else {
-                    _error.value = "Please enter valid credentials"
+                    val errorBody = response.errorBody()?.string()
+                    android.util.Log.e("CartViewModel", "Login API Error - Code: ${response.code()}, Message: ${response.message()}, Body: $errorBody")
+
+                    // Handle specific error codes
+                    when (response.code()) {
+                        400 -> _error.value = "Invalid username or password"
+                        401 -> _error.value = "Authentication failed. Please check your credentials"
+                        403 -> _error.value = "Access forbidden"
+                        404 -> _error.value = "User not found"
+                        500 -> _error.value = "Server error. Please try again later"
+                        else -> _error.value = "Login failed: ${response.message()}"
+                    }
                     _loginSuccess.value = false
                 }
+            } catch (e: UnknownHostException) {
+                android.util.Log.e("CartViewModel", "Network error - No internet connection", e)
+                _error.value = "No internet connection. Please check your network"
+                _loginSuccess.value = false
+            } catch (e: SocketTimeoutException) {
+                android.util.Log.e("CartViewModel", "Network error - Connection timeout", e)
+                _error.value = "Connection timeout. Please try again"
+                _loginSuccess.value = false
+            } catch (e: HttpException) {
+                android.util.Log.e("CartViewModel", "Network error - HTTP Exception", e)
+                _error.value = "Network error: ${e.message()}"
+                _loginSuccess.value = false
+            } catch (e: IOException) {
+                android.util.Log.e("CartViewModel", "Network error - IO Exception", e)
+                _error.value = "Network error. Please check your connection"
+                _loginSuccess.value = false
             } catch (e: Exception) {
                 android.util.Log.e("CartViewModel", "Login error", e)
                 _error.value = "Login failed: ${e.message}"
