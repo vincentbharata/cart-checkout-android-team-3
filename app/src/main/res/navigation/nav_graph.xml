@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/productPickerFragment">
+
+    <!-- Global Argument -->
+    <argument
+        android:name="userId"
+        app:argType="integer"
+        android:defaultValue="-1" />
+
+    <!-- 1. Product Picker -->
+    <fragment
+        android:id="@+id/productPickerFragment"
+        android:name="com.example.cart_checkout_team_3.ui.theme.fragment.productpicker.ProductPickerFragment"
+        android:label="Product Picker"
+        tools:layout="@layout/fragment_product_picker">
+        <action
+            android:id="@+id/action_productPickerFragment_to_addToCartFragment"
+            app:destination="@id/addToCartFragment" />
+    </fragment>
+
+    <!-- 2. Add to Cart -->
+    <fragment
+        android:id="@+id/addToCartFragment"
+        android:name="com.example.cart_checkout_team_3.ui.theme.fragment.addtocart.AddToCartFragment"
+        tools:layout="@layout/fragment_add_to_cart">
+        <argument
+            android:name="productId"
+            app:argType="integer" />
+        <argument
+            android:name="productName"
+            app:argType="string" />
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_addToCartFragment_to_cartListFragment"
+            app:destination="@id/cartListFragment" />
+    </fragment>
+
+    <!-- 3. Cart List -->
+    <fragment
+        android:id="@+id/cartListFragment"
+        android:name="com.example.cart_checkout_team_3.ui.theme.fragment.cartlist.CartListFragment"
+        android:label="Cart List"
+        tools:layout="@layout/fragment_cart_list">
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_cartListFragment_to_cartSummaryFragment"
+            app:destination="@id/cartSummaryFragment" />
+    </fragment>
+
+    <!-- 4. Cart Detail -->
+    <fragment
+        android:id="@+id/cartDetailFragment"
+        android:name="com.example.cart_checkout_team_3.ui.theme.fragment.cartdetail.CartDetailFragment"
+        android:label="Cart Detail"
+        tools:layout="@layout/fragment_cart_detail">
+        <argument
+            android:name="productName"
+            app:argType="string" />
+        <argument
+            android:name="productPrice"
+            app:argType="integer" />
+        <argument
+            android:name="productQuantity"
+            app:argType="integer" />
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+
+    <!-- 5. Cart Summary -->
+    <fragment
+        android:id="@+id/cartSummaryFragment"
+        android:name="com.example.cart_checkout_team_3.ui.theme.fragment.cartsummary.CartSummaryFragment"
+        android:label="Cart Summary"
+        tools:layout="@layout/fragment_cart_summary">
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_cartSummaryFragment_to_checkoutResultFragment"
+            app:destination="@id/checkoutResultFragment" />
+    </fragment>
+
+    <!-- 6. Checkout Result -->
+    <fragment
+        android:id="@+id/checkoutResultFragment"
+        android:name="com.example.cart_checkout_team_3.ui.theme.fragment.checkoutresult.CheckoutResultFragment"
+        android:label="Checkout Result"
+        tools:layout="@layout/fragment_checkout_result">
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+
+    <!-- 7. Cart History (Room) -->
+    <fragment
+        android:id="@+id/cartHistoryFragment"
+        android:name="com.example.cart_checkout_team_3.ui.theme.fragment.carthistory.CartHistoryFragment"
+        android:label="Cart History"
+        tools:layout="@layout/fragment_cart_history">
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+
+    <!-- 8. Quantity Selector -->
+    <fragment
+        android:id="@+id/quantitySelectorFragment"
+        android:name="com.example.cart_checkout_team_3.ui.theme.fragment.quantityselector.QuantitySelectorFragment"
+        android:label="Quantity Selector"
+        tools:layout="@layout/fragment_quantity_selector">
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+</navigation>
