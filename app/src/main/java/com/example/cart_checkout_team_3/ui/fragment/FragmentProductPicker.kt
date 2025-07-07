@@ -86,67 +86,150 @@ class FragmentProductPicker : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                filterProducts(s.toString())
+                try {
+                    val query = s?.toString() ?: ""
+                    filterProducts(query)
+                } catch (e: Exception) {
+                    android.util.Log.e("ProductPicker", "Error in search filter", e)
+                    // Show original products list if filtering fails
+                    if (::productAdapter.isInitialized) {
+                        productAdapter.submitList(allProducts)
+                    }
+                }
             }
         })
     }
 
     private fun observeViewModel() {
         viewModel.products.observe(viewLifecycleOwner) { products ->
-            allProducts = products
-            productAdapter.submitList(products)
+            try {
+                allProducts = products ?: emptyList()
 
-            if (products.isEmpty()) {
+                if (::productAdapter.isInitialized) {
+                    productAdapter.submitList(allProducts)
+                }
+
+                if (allProducts.isEmpty()) {
+                    showEmptyView()
+                } else {
+                    showProductsList()
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("ProductPicker", "Error updating products", e)
                 showEmptyView()
-            } else {
-                showProductsList()
             }
         }
 
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            try {
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            } catch (e: Exception) {
+                android.util.Log.e("ProductPicker", "Error updating loading state", e)
+            }
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-                viewModel.clearError()
+                try {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                    viewModel.clearError()
+                } catch (e: Exception) {
+                    android.util.Log.e("ProductPicker", "Error showing error message", e)
+                }
             }
         }
 
         // Observe user to ensure products are loaded for logged in user
         viewModel.user.observe(viewLifecycleOwner) { user ->
-            if (user != null && viewModel.products.value.isNullOrEmpty()) {
-                viewModel.loadProducts()
+            try {
+                if (user != null && viewModel.products.value.isNullOrEmpty()) {
+                    viewModel.loadProducts()
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("ProductPicker", "Error loading products for user", e)
             }
         }
     }
 
     private fun filterProducts(query: String) {
-        val filteredProducts = if (query.isEmpty()) {
-            allProducts
-        } else {
-            allProducts.filter { product ->
-                product.title.contains(query, ignoreCase = true) ||
-                product.description.contains(query, ignoreCase = true) ||
-                product.category.contains(query, ignoreCase = true) ||
-                product.brand.contains(query, ignoreCase = true)
+        try {
+            // Ensure we have valid data before filtering
+            if (!::productAdapter.isInitialized) {
+                android.util.Log.w("ProductPicker", "ProductAdapter not initialized, skipping filter")
+                return
+            }
+
+            val safeQuery = query.trim()
+            val filteredProducts = if (safeQuery.isEmpty()) {
+                allProducts
+            } else {
+                allProducts.filter { product ->
+                    try {
+                        val title = product.title ?: ""
+                        val description = product.description ?: ""
+                        val category = product.category ?: ""
+                        val brand = product.brand ?: ""
+
+                        title.contains(safeQuery, ignoreCase = true) ||
+                                description.contains(safeQuery, ignoreCase = true) ||
+                                category.contains(safeQuery, ignoreCase = true) ||
+                                brand.contains(safeQuery, ignoreCase = true)
+                    } catch (e: Exception) {
+                        android.util.Log.e("ProductPicker", "Error filtering product: ${product.title}", e)
+                        false
+                    }
+                }
+            }
+
+            productAdapter.submitList(filteredProducts) {
+                // Callback after list is submitted
+                if (filteredProducts.isEmpty() && safeQuery.isNotEmpty()) {
+                    showNoSearchResults()
+                } else if (filteredProducts.isNotEmpty()) {
+                    showProductsList()
+                }
+            }
+
+        } catch (e: Exception) {
+            android.util.Log.e("ProductPicker", "Error in filterProducts", e)
+            // Fallback to show all products if filtering fails
+            if (::productAdapter.isInitialized) {
+                productAdapter.submitList(allProducts)
             }
         }
-        productAdapter.submitList(filteredProducts)
     }
 
     private fun showEmptyView() {
-        binding.apply {
-            rvProducts.visibility = View.GONE
-            layoutEmptyProducts.visibility = View.VISIBLE
+        try {
+            binding.apply {
+                rvProducts.visibility = View.GONE
+                layoutEmptyProducts?.visibility = View.VISIBLE
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("ProductPicker", "Error showing empty view", e)
         }
     }
 
     private fun showProductsList() {
-        binding.apply {
-            rvProducts.visibility = View.VISIBLE
-            layoutEmptyProducts.visibility = View.GONE
+        try {
+            binding.apply {
+                rvProducts.visibility = View.VISIBLE
+                layoutEmptyProducts?.visibility = View.GONE
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("ProductPicker", "Error showing products list", e)
+        }
+    }
+
+    private fun showNoSearchResults() {
+        try {
+            binding.apply {
+                rvProducts.visibility = View.GONE
+                layoutEmptyProducts?.visibility = View.VISIBLE
+                // You can customize the empty view message for "no search results"
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("ProductPicker", "Error showing no search results", e)
         }
     }
 
