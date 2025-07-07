@@ -1,0 +1,74 @@
+# Direktori build yang dibuat Android Studio/Gradle
+/build/
+/*/build/
+
+# File dan folder lokal Android Studio
+.idea/
+.gradle/
+local.properties
+*.iml
+*.ipr
+*.iws
+
+# Direktori output untuk Android
+.cxx/
+.externalNativeBuild/
+
+# Cache Android Studio
+/.cache/
+/captures/
+/output/
+
+# File log dan crash report
+*.log
+
+# NDK file
+ndk/
+
+# Konfigurasi OS
+.DS_Store
+Thumbs.db
+
+# Cache lint
+lint/intermediates/
+lint/generated/
+
+# JDK info (optional)
+jdk/
+
+# File signing (jika ada keystore pribadi, JANGAN pernah push ke git!)
+**/keystore.jks
+**/*.keystore
+**/*.jks
+**/*.pem
+**/*.key
+**/*.p12
+
+# VSCode (jika kadang pakai)
+.vscode/
+
+# Jika pakai fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Ignore crashlytics/Firebase (optional jika tidak pakai)
+fabric.properties
+crashlytics-build.properties
+firebase_app_id.json
+
+# Gradle wrapper lock (jika muncul)
+gradle/wrapper/gradle-wrapper.properties.lock
+
+# Unit test results
+**/test-results/
+**/test-output/
+
+# Temporary files
+*.tmp
+*.swp
+*.kts~
+
+# Jetpack Compose (optional)
+**/composeDebug/
