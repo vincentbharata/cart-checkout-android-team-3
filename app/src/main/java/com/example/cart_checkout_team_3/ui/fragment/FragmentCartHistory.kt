@@ -95,6 +95,13 @@ class FragmentCartHistory : Fragment() {
     private fun observeCartHistory() {
         lifecycleScope.launch {
             try {
+                // Check if user is logged in first
+                if (!viewModel.isUserLoggedIn()) {
+                    showEmptyHistory()
+                    updateHistoryCount(0)
+                    return@launch
+                }
+
                 viewModel.getCartHistory().collect { historyList ->
                     historyAdapter.submitList(historyList)
 
@@ -108,7 +115,15 @@ class FragmentCartHistory : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error loading history: ${e.message}", Toast.LENGTH_LONG).show()
+                android.util.Log.e("FragmentCartHistory", "Error loading cart history", e)
+                val errorMessage = when {
+                    e.message?.contains("null") == true -> "Unable to load history data. Please try again."
+                    e.message?.contains("database") == true -> "Database error. Please restart the app."
+                    else -> "Error loading history: ${e.message ?: "Unknown error"}"
+                }
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+                showEmptyHistory()
+                updateHistoryCount(0)
             }
         }
     }

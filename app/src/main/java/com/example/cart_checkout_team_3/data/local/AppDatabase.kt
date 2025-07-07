@@ -25,7 +25,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "cart_checkout_database"
-                ).build()
+                )
+                .fallbackToDestructiveMigration() // This will recreate the database if there are schema conflicts
+                .build()
                 INSTANCE = instance
                 instance
             }

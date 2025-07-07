@@ -11,6 +11,7 @@ import com.example.cart_checkout_team_3.data.models.*
 import com.example.cart_checkout_team_3.data.repository.CartRepository
 import com.example.cart_checkout_team_3.utils.UserPreferences
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -467,7 +468,16 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getCartHistory(): Flow<List<CartHistoryEntity>> {
         val userId = userPreferences.getUserId()
-        return repository.getCartHistory(userId)
+        return if (userId > 0) {
+            repository.getCartHistory(userId)
+        } else {
+            // Return empty flow if user not logged in
+            flowOf(emptyList())
+        }
+    }
+
+    fun isUserLoggedIn(): Boolean {
+        return userPreferences.getUserId() > 0
     }
 
     fun logout() {

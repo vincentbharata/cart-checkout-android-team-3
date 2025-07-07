@@ -7,12 +7,19 @@ import com.example.cart_checkout_team_3.data.local.CartItemEntity
 import com.example.cart_checkout_team_3.data.models.*
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Date
 
 class CartRepository(private val database: AppDatabase) {
 
     private val apiService = ApiClient.apiService
     private val cartHistoryDao = database.cartHistoryDao()
+
+    // Helper function to format double to 2 decimal places
+    private fun formatToTwoDecimals(value: Double): Double {
+        return BigDecimal(value).setScale(2, RoundingMode.HALF_UP).toDouble()
+    }
 
     // API calls with proper error handling
     suspend fun login(username: String, password: String): Response<LoginResponse> {
@@ -57,9 +64,9 @@ class CartRepository(private val database: AppDatabase) {
             CartItemEntity(
                 productId = cartItem.id,
                 title = cartItem.title,
-                price = cartItem.price,
+                price = formatToTwoDecimals(cartItem.price),
                 quantity = cartItem.quantity,
-                total = cartItem.total,
+                total = formatToTwoDecimals(cartItem.total),
                 thumbnail = cartItem.thumbnail
             )
         }
@@ -67,8 +74,8 @@ class CartRepository(private val database: AppDatabase) {
         val cartHistory = CartHistoryEntity(
             userId = cart.userId,
             products = cartItems,
-            total = cart.total,
-            discountedTotal = cart.discountedTotal,
+            total = formatToTwoDecimals(cart.total),
+            discountedTotal = formatToTwoDecimals(cart.discountedTotal),
             totalProducts = cart.totalProducts,
             totalQuantity = cart.totalQuantity,
             timestamp = Date(),
